@@ -1,0 +1,59 @@
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build/**
+**/build/**
+**/out/**
+
+*target*
+*.jar
+*.war
+*.ear
+*.class
+
+# eclipse specific git ignore
+*.pydevproject
+.project
+.metadata
+bin/**
+**/bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+.factorypath
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# STS (Spring Tool Suite)
+.springBeans
+
+#Clover
+.clover/
+
+# IntelliJ
+.idea
+*.iml
+
+# yarn specific
+**/src/main/frontend/dist/**
+lego_conf
+fake-pom.xml
+cachepaascli.yml
+info.yml
+mergedValidations.yml
+databaseChanges.json
+databaseChangesQueries.txt
+Dockerfile
+jmeter-repo
