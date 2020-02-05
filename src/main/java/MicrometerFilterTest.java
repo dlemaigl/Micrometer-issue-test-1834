@@ -44,25 +44,14 @@ public class MicrometerFilterTest {
         compReg.add(europeanRegistry);
 
         // we try to get the counters, in theory we should get only one per registry
-        // but we don't get one
-        final Counter counterAsian = asianRegistry.find(COUNTER_ONE).counter();
-        final Counter counterEuropean = europeanRegistry.find(COUNTER_ONE).counter();
+        final Integer counterAsian = asianRegistry.find(COUNTER_ONE).counters().size();
+        final Integer counterEuropean = europeanRegistry.find(COUNTER_ONE).counters().size();
 
-        // the counters are both null!
-        if(counterAsian == null) {
-            System.out.println("counterAsian is null!");
-        } else{
-            System.out.println("counterAsian exist!");
-        }
+        // we get 0 counters in the registries!!!
+        System.out.println("Number of counters in asianRegistry: " + counterAsian );
+        System.out.println("Number of counters in europeanRegistry: " + counterEuropean );
 
-        if(counterEuropean == null) {
-            System.out.println("counterEuropean is null!");
-        } else {
-            System.out.println("counterEuropean exist!");
-        }
 
-        compReg.counter(COUNTER_ONE, COUNTRY_TAG_KEY, SPAIN).increment();
-        compReg.counter(COUNTER_ONE, COUNTRY_TAG_KEY, JAPAN).increment();
     }
 
     private static MeterRegistry createCustomMeterRegistry(String region){
