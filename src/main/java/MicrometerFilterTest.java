@@ -8,13 +8,7 @@ import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author <a href="davidli@ext.inditex.com">David Lema Iglesias</a>
- */
 public class MicrometerFilterTest {
-
-    public static final String COUNTRY_TAG_KEY = "country";
-    public static final String REGION_TAG_KEY = "region";
 
     //countries
     public static final String SPAIN = "spain";
@@ -23,7 +17,15 @@ public class MicrometerFilterTest {
     // Regions
     public static final String EUROPE = "europe";
     public static final String ASIA = "asia";
+
+    //metrics names
     public static final String COUNTER_ONE = "counter.one";
+
+    //metrics tags keys
+    public static final String COUNTRY_TAG_KEY = "country";
+    public static final String REGION_TAG_KEY = "region";
+
+
 
     public static void main(String[] args) {
 
@@ -46,6 +48,7 @@ public class MicrometerFilterTest {
         final Counter counterAsian = asianRegistry.find(COUNTER_ONE).counter();
         final Counter counterEuropean = europeanRegistry.find(COUNTER_ONE).counter();
 
+        // the counters are both null!
         if(counterAsian == null) {
             System.out.println("counterAsian is null!");
         } else{
@@ -57,6 +60,9 @@ public class MicrometerFilterTest {
         } else {
             System.out.println("counterEuropean exist!");
         }
+
+        compReg.counter(COUNTER_ONE, COUNTRY_TAG_KEY, SPAIN).increment();
+        compReg.counter(COUNTER_ONE, COUNTRY_TAG_KEY, JAPAN).increment();
     }
 
     private static MeterRegistry createCustomMeterRegistry(String region){
@@ -70,6 +76,7 @@ public class MicrometerFilterTest {
                 List<Tag> tags = new ArrayList<>();
                 for (Tag tag : id.getTagsAsIterable()) {
                     if(COUNTRY_TAG_KEY.equals(tag.getKey())){
+                        //we create a new tag (region) from the value of country tag
                         String region = getRegionFromCountry(tag.getValue());
                         tags.add(Tag.of(REGION_TAG_KEY,region));
                     } else {
@@ -81,8 +88,11 @@ public class MicrometerFilterTest {
             }
         });
 
-        //then we only accept the metrics of a specific region
+        //then we only accept the metrics of a specific tag region
+        //that was created in the MeterFilter.map before
         smr.config().meterFilter(MeterFilter.deny(
+            // this id should have the mapped region tag, but
+            //because of issue 1834 we get the originals tags instead
             id-> !region.equals(id.getTag(REGION_TAG_KEY))));
 
         return smr;
